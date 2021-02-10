@@ -150,8 +150,8 @@ classdef qregister < handle
 
         function obj = increaseSingleGateCount(obj,numGates) %#codegen
             % increases the number of gates
-            obj.numberOfSingleGatesApplied = obj.numberOfSingleGatesApplied +numGates;
-            obj.sparseThresholdCheck = obj.sparseThresholdCheck + numGates;            
+            obj.numberOfSingleGatesApplied = obj.numberOfSingleGatesApplied + uint64(numGates);
+            obj.sparseThresholdCheck = obj.sparseThresholdCheck + uint64(numGates);            
         end
         
         function sparseOrFullState = getSparseOrFullState(obj) %#codegen

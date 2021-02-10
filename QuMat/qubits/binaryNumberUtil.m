@@ -16,8 +16,17 @@ classdef binaryNumberUtil
                numArray(bitVal) = varargin{bitVal};
            end
            binStr = num2str(numArray);
-           binStr(isspace(binStr)) = '';
-           number = bin2dec(binStr);
+           binaryString = blanks(nargin);
+           binaryString(1) = binStr(1);
+           counter = 1;
+           dims = size(binStr);
+           for charInd = 1:dims(2)
+                if ~isspace(binStr(charInd))
+                    binaryString(counter) = char(binStr(charInd));
+                    counter = counter +1;
+                end
+           end
+           number = bin2dec(binaryString);
         end
         
         function binArray = decimalToBinary(number)

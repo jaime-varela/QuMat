@@ -7,6 +7,8 @@ classdef singleGateUtil %#codegen
         % percent nonzero in matrix
         % anything above this should not be considered sparse
         SparsityThreshold = 0.7;
+        
+        identityThreshold = 0.00000001;        
     end
     
     methods(Static)
@@ -21,7 +23,7 @@ classdef singleGateUtil %#codegen
             isValid = startQubit + numGates <= numQubits;
         end
         
-        function isSparse = isGateArraySparse(gateMatrices) %#codegen
+        function [isSparse , numIdent] = isGateArraySparse(numQubits,gateMatrices) %#codegen
             %isGateArraySparse Returns true if the gate matrix array is
             % sparse
             %
@@ -30,8 +32,15 @@ classdef singleGateUtil %#codegen
             %
             gateArraySize = size(gateMatrices);
             numGates = gateArraySize(3);
-            numberofZeros = nnz(~gateMatrices);
-            numElements = 4*numGates;
+            numIdent = 0;
+            for numGate = 1 : numGates
+                gt = gateMatrices(:,:,numGate);
+                if sum(sum(gt - eye(2) < singleGateUtil.identityThreshold)) == 0
+                    numIdent = numIdent + 1;
+                end
+            end
+            numberofZeros = nnz(~gateMatrices) + 2*(numQubits - numGates + numIdent);            
+            numElements = 4*numQubits;
             isSparse = (1-(numberofZeros/numElements)) < singleGateUtil.SparsityThreshold;
         end
         
@@ -44,52 +53,40 @@ classdef singleGateUtil %#codegen
  
         end
         
-        function identityMatrix = identityGate(isSparseGateArray,dim) %#codegen
-            if isSparseGateArray
-                identityMatrix = speye(dim);
-            else
-                identityMatrix = eye(dim);
-            end
-        end
-        
-        function updatedGate = getSparseGateIfNeeded(isSparse,gate) %#codegen
-           if isSparse
-               localVar = sparse(gate);
-           else
-               localVar = gate;
-           end
-           coder.varsize('localVar',[inf inf]);
-           updatedGate = localVar;
-        end
-        
-        function [stateOperator, numGates] = constructGateArrayOperator(numQubits,startQubit,gateMatrices) %#codegen
-
-            % TODO: pre-allocate for performance gains
-             dims = size(gateMatrices);
-             numGates = dims(3);
-
-             numRemainingQubits = numQubits-numGates-uint32(startQubit);
-             dimRemainingQubits = uint32(2)^numRemainingQubits;
-             dimStartQubits = uint32(2)^(uint32(startQubit));
-%             stateOperator = kron(speye(dimStartQubits,dimStartQubits),...
-%                 kron(sparse(gateMatrix),speye(dimRemainingQubits,dimRemainingQubits)));
+      
+        function [opIsSparse, fullOp, sparseOp, numNonIdentityGates] = constructGateArrayOperator(numQubits,startQubit,gateMatrices) %#codegen
+            % if opIsSparse = true sparseOp is valid otherwise fullOp is
+            % valid            
             
-            stateOperator = kron(speye(dimStartQubits),kron(...
-                singleGateUtil.tensorgateMatrices(gateMatrices),speye(dimRemainingQubits)));            
-                        
-        end
-        
-        function tensorOp = tensorgateMatrices(gateMatrices) %#codegen
+            % TODO: validate inputs
+
             dims = size(gateMatrices);
             numGates = dims(3);
-            gateOperator = eye(1);
-            isSparseGateArray = singleGateUtil.isGateArraySparse(gateMatrices);
-            
+
+            numRemainingQubits = numQubits-numGates-uint32(startQubit);
+            dimRemainingQubits = uint32(2)^numRemainingQubits;
+            dimStartQubits = uint32(2)^(uint32(startQubit));
+            [opIsSparse, numIdent] = singleGateUtil.isGateArraySparse(numQubits,gateMatrices);
+            numNonIdentityGates = numQubits - (numGates - numIdent);
+            % TODO: remove this full allocation when sparse matrices are
+            % needed
+            localFull = (1.0+0.0*1i)*eye(1);
+            coder.varsize('localFull');
             for qubitNum = 1:numGates
-                gateOperator = kron(gateOperator,...
-                    singleGateUtil.getSparseGateIfNeeded(isSparseGateArray,gateMatrices(:,:,qubitNum)));
+                localFull = kron(localFull,...
+                    gateMatrices(:,:,qubitNum));
             end
-            tensorOp = gateOperator;
+
+            if opIsSparse
+                sparseOp = kron(speye(dimStartQubits),kron(...
+                                        sparse(localFull),speye(dimRemainingQubits)));
+                fullOp = (0.0+1i*0.0) .* ones(1,1);                
+            else
+                fullOp = kron(eye(dimStartQubits),kron(...
+                                        localFull,eye(dimRemainingQubits)));
+                sparseOp = sparse(1,1,0.0+1i*0.0,2^numQubits,2^numQubits);
+            end
+            coder.varsize('fullOp');
         end
         
         

@@ -41,12 +41,24 @@ if ~isValid
 end
 
 updatedRegister = qregister;
-[stateOperator, numNonIdentityGates] = singleGateUtil.constructGateArrayOperator(numQubits,startQubit,gateMatrices);
-
+[opIsSparse, fullOp, sparseOp, numNonIdentityGates] = singleGateUtil.constructGateArrayOperator(numQubits,startQubit,gateMatrices);
+% split up the sparse construction (one function can't construct two types
+% or create multiple outputs)
 if updatedRegister.isSparse
-    updatedRegister.sparseQuantumState = stateOperator * qregister.sparseQuantumState;
+    if opIsSparse
+        updatedRegister.sparseQuantumState = sparseOp * qregister.sparseQuantumState;
+    else
+        updatedRegister.quantumState = fullOp * qregister.sparseQuantumState;        
+        % no longer sparse
+        updatedRegister.isSparse = false;
+        updatedRegister.sparseQuantumState = sparse(1,1,0.0+0.0*1i,updatedRegister.hilbertSpaceDimension,1);
+    end
 else
-    updatedRegister.quantumState = stateOperator * qregister.quantumState;
+    if opIsSparse
+        updatedRegister.quantumState = sparseOp * qregister.quantumState;
+    else
+        updatedRegister.quantumState = fullOp * qregister.quantumState;        
+    end
 end
 
 updatedRegister = updatedRegister.increaseSingleGateCount(numNonIdentityGates);
