@@ -28,6 +28,29 @@ classdef tHadamard < matlab.unittest.TestCase
            testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
         end
         
+        function tGateArrayHadamardGateUtil(testCase)
+           qc = qregister(3);
+           hgate = standardGates.H;
+           gateArray = singleGateUtil.generateGateArray(hgate,hgate,hgate);
+           qc = singleQubitGateArray(qc,gateArray);
+           newState = qc.getState();
+           expectedState = ones(qc.hilbertSpaceDimension,1).*(1.0/sqrt(qc.hilbertSpaceDimension));
+           import matlab.unittest.constraints.IsEqualTo
+           testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
+        end
+        
+        function tGateArrayHadamardGateUtil2(testCase)
+           qc = qregister(4);
+           hgate = standardGates.H;
+           gateArray = singleGateUtil.generateGateArray(hgate,hgate,hgate);
+           qc = singleQubitGateArray(qc,1,gateArray);
+           qc = hGate(qc,0);
+           newState = qc.getState();
+           expectedState = ones(qc.hilbertSpaceDimension,1).*(1.0/sqrt(qc.hilbertSpaceDimension));
+           import matlab.unittest.constraints.IsEqualTo
+           testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
+        end
+        
     end
     
     methods (Access = private)

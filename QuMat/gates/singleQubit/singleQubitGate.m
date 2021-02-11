@@ -21,8 +21,4 @@ end
 
 updatedRegister = updatedRegister.increaseSingleGateCount(1);
 
-if updatedRegister.shouldUpdateSparsity()
-    updatedRegister = updatedRegister.updateSparsity();
-end
-
 end

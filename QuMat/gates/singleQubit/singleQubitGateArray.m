@@ -63,8 +63,4 @@ end
 
 updatedRegister = updatedRegister.increaseSingleGateCount(numNonIdentityGates);
 
-if updatedRegister.shouldUpdateSparsity()
-    updatedRegister = updatedRegister.updateSparsity();
-end
-
 end

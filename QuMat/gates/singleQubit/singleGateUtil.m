@@ -46,8 +46,8 @@ classdef singleGateUtil %#codegen
         
         function stateOperator = constructSingleGateOperator(numQubits,qubitIndex,gateMatrix) %#codegen
             numRemainingQubits = numQubits-1-uint32(qubitIndex);
-            dimRemainingQubits = uint32(2)^numRemainingQubits;
-            dimStartQubits = uint32(2)^(uint32(qubitIndex));
+            dimRemainingQubits = uint64(2)^uint64(numRemainingQubits);
+            dimStartQubits = uint64(2)^(uint64(qubitIndex));
             stateOperator = kron(speye(dimStartQubits),...
                 kron(sparse(gateMatrix),speye(dimRemainingQubits)));
  
@@ -64,8 +64,8 @@ classdef singleGateUtil %#codegen
             numGates = dims(3);
 
             numRemainingQubits = numQubits-numGates-uint32(startQubit);
-            dimRemainingQubits = uint32(2)^numRemainingQubits;
-            dimStartQubits = uint32(2)^(uint32(startQubit));
+            dimRemainingQubits = uint64(2)^uint64(numRemainingQubits);
+            dimStartQubits = uint64(2)^(uint64(startQubit));
             [opIsSparse, numIdent] = singleGateUtil.isGateArraySparse(numQubits,gateMatrices);
             numNonIdentityGates = numQubits - (numGates - numIdent);
             % TODO: remove this full allocation when sparse matrices are
@@ -90,9 +90,16 @@ classdef singleGateUtil %#codegen
         end
         
         
-        %function gateArray = generateGateArray(varargin) %#codegen
-
-        
+        function gateArray = generateGateArray(varargin) %#codegen
+            
+            %TODO check valid inputs
+            
+            numGates = nargin;
+            gateArray = zeros(2,2,numGates);
+            for qubitNum = 1:numGates
+                gateArray(:,:,qubitNum) = varargin{qubitNum};
+            end
+        end
     end
 end
 
