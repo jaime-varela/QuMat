@@ -14,6 +14,6 @@ testResultChecker(testRes);
 
 
 if runCodegenTests
-    runtests('./tests/codegen/','IncludeSubfolders',true);
+    runtests('./tests/codeGeneration/','IncludeSubfolders',true);
     testResultChecker(testRes);    
 end
