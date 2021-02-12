@@ -19,6 +19,8 @@ classdef qregister < handle
         numberOfCnotGatesApplied = uint64(0);
         
         numberOfControlGates = uint64(0);
+        
+        numberOfSwapGates = uint64(0);
 
         % kept as double as sometimes you need to write 1/sqrt(hdim)
         hilbertSpaceDimension = 4;
@@ -173,6 +175,15 @@ classdef qregister < handle
             if obj.shouldUpdateSparsity()
                 obj = obj.updateSparsity();
             end
+        end
+        
+        function obj = increaseSwapGateCount(obj,numGates) %codegen
+            % increases the number of gates
+            obj.numberOfSwapGates = obj.numberOfSwapGates + uint64(numGates);
+            obj.sparseThresholdCheck = obj.sparseThresholdCheck + uint64(numGates);            
+            if obj.shouldUpdateSparsity()
+                obj = obj.updateSparsity();
+            end            
         end
         
         function sparseOrFullState = getSparseOrFullState(obj) %#codegen

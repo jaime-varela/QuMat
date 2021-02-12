@@ -1,4 +1,4 @@
-function updatedRegister = cnot(qregister,controlQubit,targetQubit) %#codegen
+function updatedRegister = cnotGate(qregister,controlQubit,targetQubit) %#codegen
 %CONTROLGATE Summary of this function goes here
 %   Detailed explanation goes here
     updatedRegister = controlGate(qregister,controlQubit,targetQubit,...

@@ -45,7 +45,7 @@ classdef singleGateUtil %#codegen
         end
         
         function stateOperator = constructSingleGateOperator(numQubits,qubitIndex,gateMatrix) %#codegen
-            numRemainingQubits = numQubits-1-uint32(qubitIndex);
+            numRemainingQubits = uint32(numQubits)-1-uint32(qubitIndex);
             dimRemainingQubits = uint64(2)^uint64(numRemainingQubits);
             dimStartQubits = uint64(2)^(uint64(qubitIndex));
             stateOperator = kron(speye(dimStartQubits),...
@@ -99,6 +99,19 @@ classdef singleGateUtil %#codegen
             for qubitNum = 1:numGates
                 gateArray(:,:,qubitNum) = varargin{qubitNum};
             end
+        end
+        
+        function stateOperator = generateTwoQubitOperator(numQubits,firstQubit,secondQubit,op1,op2)
+            % Todo validate inputs
+            numRemainingQubits = numQubits-1- secondQubit;
+            dimRemainingQubits = uint64(2)^uint64(numRemainingQubits);
+            dimStartQubits = uint64(2)^(uint64(firstQubit));
+            dimMidQubits = uint64(2)^uint64(secondQubit - firstQubit -1);
+            
+            startIden = speye(dimStartQubits);
+            midIden = speye(dimMidQubits);
+            endIden = speye(dimRemainingQubits);
+            stateOperator = kron(kron(startIden , kron(sparse(op1) , midIden) ), kron(sparse(op2) , endIden));
         end
     end
 end

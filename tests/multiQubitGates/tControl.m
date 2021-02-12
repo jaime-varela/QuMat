@@ -5,7 +5,7 @@ classdef tControl < matlab.unittest.TestCase
     methods (Test)
         function tCnot(testCase)
             qcInit = qregister(0,1,0);
-            qcInit = cnot(qcInit,1,2);            
+            qcInit = cnotGate(qcInit,1,2);            
             qcExpected = qregister(0,1,1);
             newState = qcInit.getState();
             expectedState = qcExpected.getState();
@@ -15,7 +15,7 @@ classdef tControl < matlab.unittest.TestCase
 
         function tCnot2(testCase)
             qcInit = qregister(0,1,0,1);
-            qcInit = cnot(qcInit,2,3);      
+            qcInit = cnotGate(qcInit,2,3);      
             qcExpected = qregister(0,1,0,1);
             newState = qcInit.getState();
             expectedState = qcExpected.getState();
@@ -24,7 +24,7 @@ classdef tControl < matlab.unittest.TestCase
         end
         function tCnot3(testCase)
             qcInit = qregister(0,1,0,1);
-            qcInit = cnot(qcInit,1,2);      
+            qcInit = cnotGate(qcInit,1,2);      
             qcExpected = qregister(0,1,1,1);
             newState = qcInit.getState();
             expectedState = qcExpected.getState();
