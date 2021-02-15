@@ -11,6 +11,8 @@ testRes = runtests('./tests/singleQubitGates/','IncludeSubfolders',true);
 testResultChecker(testRes);
 testRes = runtests('./tests/multiQubitGates/','IncludeSubfolders',true);
 testResultChecker(testRes);
+testRes = runtests('./tests/algorithms/','IncludeSubfolders',true);
+testResultChecker(testRes);
 
 
 if runCodegenTests

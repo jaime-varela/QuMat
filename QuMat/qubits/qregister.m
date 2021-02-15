@@ -27,6 +27,9 @@ classdef qregister < handle
 
         % used to keep track of when we need to check sparsity
         sparseThresholdCheck = uint64(0);
+        
+        % number of measurements performed on qubits
+        numberOfMeasurementsApplied = uint64(0);
     end
     
     methods
@@ -62,21 +65,35 @@ classdef qregister < handle
                 % Todo: check input dim factor of two
                 dims = size(varargin{1});
                 [hdim, index] = max(dims);
-                obj.quantumState = obj.quantumState / norm(obj.quantumState);
                 inputVec = (1.0+0.0*1i).* varargin{1};
                 if index == 2
                     stateVec = transpose(inputVec)/norm(transpose(inputVec));
                 else
                     stateVec = inputVec/norm(inputVec);
                 end
-                obj.quantumState = stateVec;
-                obj.hilbertSpaceDimension = uint64(hdim);
-                obj.numberOfQubits = uint32(log2(hdim));
-                obj.isSparse = false;
-                % zero state for the sparse state
-                obj.sparseQuantumState = sparse(1,1,0+0.0*1i,2^obj.numberOfQubits,1);
+                
+                if nnz(stateVec) / (1.0*obj.hilbertSpaceDimension) < 0.7
+                    obj.sparseQuantumState = sparse(stateVec);
+                    obj.hilbertSpaceDimension = uint64(hdim);
+                    obj.numberOfQubits = uint32(log2(hdim));
+                    obj.isSparse = true;
+                    % dummy quantum state for codegen compatibility
+                    localVar = 1i*ones(obj.numberOfQubits,int32(1));
+                    coder.varsize('localVar',[inf 1]);
+
+                    % we keep the  quantum state first dim variable as we may
+                    % not need to allocate the full state.
+                    obj.quantumState = localVar;                
+                else
+                    obj.quantumState = stateVec;
+                    obj.hilbertSpaceDimension = uint64(hdim);
+                    obj.numberOfQubits = uint32(log2(hdim));
+                    obj.isSparse = false;
+                    % zero state for the sparse state
+                    obj.sparseQuantumState = sparse(1,1,0+0.0*1i,2^obj.numberOfQubits,1);                    
+                end
             elseif nargin == 2
-                obj.numberOfQubits = uint64(varargin{1});
+                obj.numberOfQubits = uint32(varargin{1});
                 obj.isSparse = true;
                 obj.sparseQuantumState = sparse(varargin{2}+1,1,1+0.0*1i,2^obj.numberOfQubits,1);
                 obj.hilbertSpaceDimension = uint64(uint64(2)^uint64(varargin{1}));   
@@ -114,14 +131,10 @@ classdef qregister < handle
             
             % TODO : type checks
                         
-            obj.isSparse = obj.isSparse || aRegister.isSparse;
-            productState = kron(obj.getSparseOrFullState(), aRegister.getSparseOrFullState());
-            if obj.isSparse
-                obj.sparseQuantumState = productState;
-            else
-                obj.quantumState = productState;
-            end
-            obj.numberOfQubits = obj.numberOfQubits + aRegister.numberOfQubits;
+            firstState = obj.getState();
+            secondState = aRegister.getState();
+            productState = kron(firstState, secondState);
+            obj = qregister(productState);
         end
 
         function obj = updateSparsity(obj) %#codegen
@@ -194,6 +207,41 @@ classdef qregister < handle
                 return;
             end
             sparseOrFullState = obj.quantumState; 
+        end
+        
+        function obj = setLexicographicState(obj,state)
+            % updates the state given a lexicographic state
+                % Todo: check input dim factor of two
+                %TODO get rid of repeaded code
+                dims = size(state);
+                [hdim, index] = max(dims);
+                inputVec = (1.0+0.0*1i).* state;
+                if index == 2
+                    stateVec = transpose(inputVec)/norm(transpose(inputVec));
+                else
+                    stateVec = inputVec/norm(inputVec);
+                end
+                
+                if nnz(stateVec) / (1.0*obj.hilbertSpaceDimension) < 0.7
+                    obj.sparseQuantumState = sparse(stateVec);
+                    obj.hilbertSpaceDimension = uint64(hdim);
+                    obj.numberOfQubits = uint32(log2(hdim));
+                    obj.isSparse = true;
+                    % dummy quantum state for codegen compatibility
+                    localVar = 1i*ones(obj.numberOfQubits,int32(1));
+                    coder.varsize('localVar',[inf 1]);
+
+                    % we keep the  quantum state first dim variable as we may
+                    % not need to allocate the full state.
+                    obj.quantumState = localVar;                
+                else
+                    obj.quantumState = stateVec;
+                    obj.hilbertSpaceDimension = uint64(hdim);
+                    obj.numberOfQubits = uint32(log2(hdim));
+                    obj.isSparse = false;
+                    % zero state for the sparse state
+                    obj.sparseQuantumState = sparse(1,1,0+0.0*1i,2^obj.numberOfQubits,1);                    
+                end            
         end
         
     end

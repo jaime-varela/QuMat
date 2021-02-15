@@ -1,6 +1,11 @@
 function updatedRegister = controlGate(qregister,controlQubit, targetQubit,operation)
 %CONTROLGATE Summary of this function goes here
 %   Detailed explanation goes here
+
+if controlQubit >= targetQubit
+  error('target qubit index must be greater than control');
+end
+
 numQubits = qregister.numberOfQubits;
 stateOperator = multiGateUtil.constructControlOperator(numQubits,controlQubit,targetQubit,operation);
 updatedRegister = qregister;
