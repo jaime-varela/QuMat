@@ -1,9 +1,10 @@
 function updatedRegister = toffoliGate(qregister,controlQubit, secondControlQubit,targetQubit)
-%CONTROLGATE Summary of this function goes here
-%   Detailed explanation goes here
+%toffoliGate Toffoli gate implemented via single and two qubit gates
+%   Toffoli gate
 
 %TODO document and verify inputs
 % TODO2 may not be optimal
+% TODO3 see if it works with target at index 0
 
 numQubits = qregister.numberOfQubits;
 

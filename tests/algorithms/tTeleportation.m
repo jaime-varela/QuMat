@@ -10,8 +10,7 @@ classdef tTeleportation < matlab.unittest.TestCase
             entangleRegister = cnotGate(entangleRegister,0,1);
 
             % initial state (qregister does the normalization)
-            randVec = [(rand() + 1i*rand()); (rand() +1i*rand())];
-            initialQubit = qregister(randVec);
+            initialQubit = randKet();
 
             % store the state for later analysis
             expectedState = initialQubit.getState();

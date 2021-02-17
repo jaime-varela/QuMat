@@ -67,7 +67,7 @@ classdef singleGateUtil %#codegen
             dimRemainingQubits = uint64(2)^uint64(numRemainingQubits);
             dimStartQubits = uint64(2)^(uint64(startQubit));
             [opIsSparse, numIdent] = singleGateUtil.isGateArraySparse(numQubits,gateMatrices);
-            numNonIdentityGates = numQubits - (numGates - numIdent);
+            numNonIdentityGates = (numGates - numIdent);
             % TODO: remove this full allocation when sparse matrices are
             % needed
             localFull = (1.0+0.0*1i)*eye(1);

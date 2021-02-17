@@ -24,12 +24,15 @@ classdef qregister < handle
 
         % kept as double as sometimes you need to write 1/sqrt(hdim)
         hilbertSpaceDimension = 4;
-
-        % used to keep track of when we need to check sparsity
-        sparseThresholdCheck = uint64(0);
         
         % number of measurements performed on qubits
         numberOfMeasurementsApplied = uint64(0);
+    end
+    
+    properties(Access=private)
+        % used to keep track of when we need to check sparsity
+        sparseThresholdCheck = uint64(0);
+        
     end
     
     methods
@@ -134,7 +137,17 @@ classdef qregister < handle
             firstState = obj.getState();
             secondState = aRegister.getState();
             productState = kron(firstState, secondState);
+            % new gate counts
+            numberSingleGates = obj.numberOfSingleGatesApplied + aRegister.numberOfSingleGatesApplied;
+            nCnot = obj.numberOfCnotGatesApplied + aRegister.numberOfCnotGatesApplied;
+            nCtrl = obj.numberOfControlGates + aRegister.numberOfControlGates;
+            nSwap = obj.numberOfSwapGates + aRegister.numberOfSwapGates;
             obj = qregister(productState);
+            obj.numberOfSingleGatesApplied = numberSingleGates;
+            obj.numberOfCnotGatesApplied = nCnot;
+            obj.numberOfControlGates = nCtrl;
+            obj.numberOfSwapGates = nSwap;
+            
         end
 
         function obj = updateSparsity(obj) %#codegen
