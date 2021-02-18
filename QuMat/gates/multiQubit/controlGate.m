@@ -1,9 +1,8 @@
 function updatedRegister = controlGate(qregister,controlQubit, targetQubit,operation)
 %CONTROLGATE Summary of this function goes here
 %   Detailed explanation goes here
-
-if controlQubit >= targetQubit
-  error('target qubit index must be greater than control');
+if controlQubit == targetQubit
+    error('target and control must be different')
 end
 
 numQubits = qregister.numberOfQubits;

@@ -32,6 +32,42 @@ classdef tControl < matlab.unittest.TestCase
             testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
         end
 
+        function tReverseControl1(testCase)
+            qcInit = qregister(0,1,0,1);
+            qcInit = cnotGate(qcInit,2,1);      
+            qcExpected = qregister(0,1,0,1);
+            newState = qcInit.getState();
+            expectedState = qcExpected.getState();
+            import matlab.unittest.constraints.IsEqualTo
+            testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
+        end
+        function tReverseControl2(testCase)
+            qcInit = qregister(0,1,1,0);
+            qcInit = cnotGate(qcInit,2,1);      
+            qcExpected = qregister(0,0,1,0);
+            newState = qcInit.getState();
+            expectedState = qcExpected.getState();
+            import matlab.unittest.constraints.IsEqualTo
+            testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
+        end
+        function tReverseControlOperator(testCase)
+            qcInit = qregister(0,1,1,0);
+            qcInit = controlGate(qcInit,2,1,standardGates.X);      
+            qcExpected = qregister(0,0,1,0);
+            newState = qcInit.getState();
+            expectedState = qcExpected.getState();
+            import matlab.unittest.constraints.IsEqualTo
+            testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
+        end
+        function tReverseControlOperator2(testCase)
+            qcInit = qregister(0,1,1,0);
+            qcInit = controlGate(qcInit,2,0,standardGates.X);      
+            qcExpected = qregister(1,1,1,0);
+            newState = qcInit.getState();
+            expectedState = qcExpected.getState();
+            import matlab.unittest.constraints.IsEqualTo
+            testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
+        end
         
     end
         

@@ -113,6 +113,17 @@ classdef singleGateUtil %#codegen
             endIden = speye(dimRemainingQubits);
             stateOperator = kron(kron(startIden , kron(sparse(op1) , midIden) ), kron(sparse(op2) , endIden));
         end
+        
+        function updatedRegister = applyToEach(Qregister,gate)
+            numQubits = Qregister.numberOfQubits;
+            gateArray = zeros(2,2,numQubits);
+            for qubitNum = 1:numQubits
+                gateArray(:,:,qubitNum) = gate;    
+            end
+            updatedRegister = Qregister;
+            updatedRegister = singleQubitGateArray(updatedRegister,gateArray);
+            
+        end
     end
 end
 

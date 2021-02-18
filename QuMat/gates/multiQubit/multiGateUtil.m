@@ -9,20 +9,33 @@ classdef multiGateUtil
             %   Detailed explanation goes here
             
             % see formula 1.36 of the Mermin book
-            numRemainingQubits = numQubits-1- targetQubit;
+            firstQubit = controlQubit;
+            secondQubit = targetQubit;
+            if controlQubit > targetQubit
+                firstQubit = targetQubit;
+                secondQubit = controlQubit;
+            end
+            
+            
+            numRemainingQubits = numQubits-1- secondQubit;
             dimRemainingQubits = uint64(2)^uint64(numRemainingQubits);
-            dimStartQubits = uint64(2)^(uint64(controlQubit));
-            dimMidQubits = uint64(2)^uint64(targetQubit - controlQubit -1);
-            numAfterControl = numQubits -1 - controlQubit;
-            dimAfterControl = uint64(2)^uint64(numAfterControl);
+            dimStartQubits = uint64(2)^(uint64(firstQubit));
+            dimMidQubits = uint64(2)^uint64(secondQubit - firstQubit -1);
+            numAfterFirst = numQubits -1 - firstQubit;
+            dimAfterFirst = uint64(2)^uint64(numAfterFirst);
             
             ntilde = sparse(standardGates.ProjectZero);
             n = sparse(standardGates.ProjectOne);
             startIden = speye(dimStartQubits);
             midIden = speye(dimMidQubits);
             endIden = speye(dimRemainingQubits);
-            controlQp = kron(startIden,kron(ntilde,speye(dimAfterControl))) + ...
-                kron(startIden,  kron( kron(n , midIden) ,kron(sparse(gate),endIden) ) );
+            if controlQubit < targetQubit
+                controlQp = kron(startIden,kron(ntilde,speye(dimAfterFirst))) + ...
+                    kron(startIden,  kron( kron(n , midIden) ,kron(sparse(gate),endIden) ) );
+            else
+                controlQp =  kron(kron(startIden , speye(2)) , kron(kron(midIden, ntilde) , endIden)) + ...
+                    kron(kron(startIden , sparse(gate)) , kron(kron(midIden, n), endIden));
+            end
         end
     end
 end

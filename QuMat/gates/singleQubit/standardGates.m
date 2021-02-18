@@ -14,9 +14,13 @@ classdef standardGates
         Flip = [0 1;1 0];
         ProjectZero = [1.0+0.0*1i 0;0.0 0.0];
         ProjectOne = [0 0;0.0 1.0+0.0*1i];
+        Id = [1.0+0.0*1i 0;0.0 1.0+0.0*1i];
     end
     
     methods(Static)
+        function RmGate = Rm(m)
+            RmGate = [1 0 ; 0 exp(2*pi*1i/(2^m))];
+        end
         
         function phGate = phaseGate(phase)
             phGate = [1 0; 0 cos(phase) + 1i* sin(phase)];

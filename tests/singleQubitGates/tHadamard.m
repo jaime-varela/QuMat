@@ -50,6 +50,15 @@ classdef tHadamard < matlab.unittest.TestCase
            import matlab.unittest.constraints.IsEqualTo
            testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
         end
+        function tGateArrayHadamardGateUtil3(testCase)
+           qc = qregister(4);
+           hgate = standardGates.H;
+           qc = singleGateUtil.applyToEach(qc,hgate);
+           newState = qc.getState();
+           expectedState = ones(qc.hilbertSpaceDimension,1).*(1.0/sqrt(qc.hilbertSpaceDimension));
+           import matlab.unittest.constraints.IsEqualTo
+           testCase.verifyThat(newState,IsEqualTo(expectedState,'Within',testCase.getTolObj()));                
+        end
         
     end
     
