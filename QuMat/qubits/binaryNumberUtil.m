@@ -30,6 +30,7 @@ classdef binaryNumberUtil
         end
         
         function binArray = decimalToBinary(number)
+            % decimalToBinary(3) -> [1,1]
            binArray = de2bi(number);
         end
     end

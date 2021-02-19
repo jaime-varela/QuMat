@@ -1,6 +1,6 @@
 classdef multiGateUtil
-    %UNTITLED Summary of this class goes here
-    %   Detailed explanation goes here
+    %MULTIGATEUTIL A multi gate utility
+    %   use this to construct multi-gate operators
     
     methods (Static)
         

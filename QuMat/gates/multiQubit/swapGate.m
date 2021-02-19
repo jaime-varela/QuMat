@@ -1,6 +1,6 @@
 function updatedRegister = swapGate(qregister,qubitIndex1,qubitIndex2) %#codegen
-%CONTROLGATE Summary of this function goes here
-%   Detailed explanation goes here
+%SWAPGATE Swap gate operation
+%   Implements swap operation as a compbination of three cnot gates
     
     % swap gate is three cnot gates
     updatedRegister = cnotGate(qregister,qubitIndex1,qubitIndex2);

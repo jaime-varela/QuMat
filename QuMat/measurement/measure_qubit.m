@@ -1,6 +1,15 @@
 function [updatedRegister,varargout ] = measure_qubit(qregister,varargin) %#codegen
-%MEASURE_QUBIT Summary of this function goes here
-%   Detailed explanation goes here
+%MEASURE_QUBIT Single qubit measurement
+%
+%   Syntax: measure_qubit(qregister,qubitIndex)
+%
+%      will measure the qubit in the qubitIndex location non-destructively
+%
+%   Syntax: measure_qubit(qregister,qubitIndex,isDestructive)
+%      
+%      will reduce the hilbert space dimension if isDestructiveMeasure =
+%      true
+%
 %  Outputs:
 %  [updatedRegister, result, probability]
 

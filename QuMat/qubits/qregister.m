@@ -3,17 +3,18 @@ classdef qregister < handle
     %   A quantum register object
     
     properties
-        % number of qubits in register
         
         % a sparse array is generated under certain conditions
         sparseQuantumState;
         
         % the full lexicographical state array
         quantumState;
+        % flag to denote if the register is keeping a sparse or full state
         isSparse = false;
 
+        % number of qubits in register
         numberOfQubits = uint32(2);
-
+        
         numberOfSingleGatesApplied = uint64(0);
         
         numberOfCnotGatesApplied = uint64(0);
@@ -203,13 +204,18 @@ classdef qregister < handle
             end
         end
         
-        function obj = increaseSwapGateCount(obj,numGates) %codegen
+        function obj = increaseSwapGateCount(obj,numGates) %#codegen
             % increases the number of gates
             obj.numberOfSwapGates = obj.numberOfSwapGates + uint64(numGates);
             obj.sparseThresholdCheck = obj.sparseThresholdCheck + uint64(numGates);            
             if obj.shouldUpdateSparsity()
                 obj = obj.updateSparsity();
             end            
+        end
+        
+        function obj = increaseMeasurementGateCount(obj,numMeasurements) %#codegen
+            % increases the number of gates
+            obj.numberOfMeasurementsApplied = obj.numberOfMeasurementsApplied + uint64(numMeasurements);
         end
         
         function sparseOrFullState = getSparseOrFullState(obj) %#codegen
@@ -224,7 +230,8 @@ classdef qregister < handle
         
         function obj = setLexicographicState(obj,state)
             % updates the state given a lexicographic state
-                % Todo: check input dim factor of two
+
+            % Todo: check input dim factor of two
                 %TODO get rid of repeaded code
                 dims = size(state);
                 [hdim, index] = max(dims);

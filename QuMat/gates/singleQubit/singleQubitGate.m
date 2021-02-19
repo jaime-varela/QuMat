@@ -1,5 +1,5 @@
 function updatedRegister = singleQubitGate(qregister,qubitIndex,gateMatrix) %#codegen
-% singleQubitGate - Apply G to the qubit in the ith position
+% singleQubitGate - Apply gateMatrix to the qubit in the ith position
 %
 % Syntax: updatedRegister = singleQubitGate(qregister,qubitIndex,gateMatrix)
 %

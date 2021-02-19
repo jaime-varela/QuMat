@@ -1,6 +1,6 @@
 classdef standardGates
-    %STANDARDGATES Summary of this class goes here
-    %   Detailed explanation goes here
+    %STANDARDGATES A utility containing the standard gates
+    %   Use this to get common gates
     
     properties (Constant)
         H = [1 1;1 -1] .* (1/sqrt(2));

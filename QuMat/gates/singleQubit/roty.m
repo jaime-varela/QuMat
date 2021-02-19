@@ -1,8 +1,8 @@
 function updatedRegister = roty(qregister,qubitIndex,theta)
-%singleQubitGate - Apply X to the qubit in the ith position
+%singleQubitGate - Apply roty to the qubit in the ith position
 %
-% Syntax: updatedRegister = singleQubitGate(qregister,qubitIndex,gateMatrix)
+% Syntax: updatedRegister = roty(qregister,qubitIndex)
 %
-% Applies [...] to the state and returns the register
+
     updatedRegister = singleQubitGate(qregister,qubitIndex,standardGates.rotY(theta));
 end

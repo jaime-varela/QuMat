@@ -1,7 +1,8 @@
 classdef singleGateUtil %#codegen
     %#codegen
     %SINGLEGATEUTIL Utilities for single gates
-    %   Can be used to construct gate arrays
+    %   Can be used to construct gate arrays or apply one gate to each
+    %   qubit in a register.
     
     properties (Constant)
         % percent nonzero in matrix

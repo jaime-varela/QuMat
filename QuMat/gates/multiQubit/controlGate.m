@@ -1,6 +1,7 @@
 function updatedRegister = controlGate(qregister,controlQubit, targetQubit,operation)
-%CONTROLGATE Summary of this function goes here
-%   Detailed explanation goes here
+%CONTROLGATE Two qubit control gate
+%   Standard control operation
+
 if controlQubit == targetQubit
     error('target and control must be different')
 end

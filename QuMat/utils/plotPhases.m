@@ -1,6 +1,15 @@
 function probPlot = plotPhases(Qregister,varargin)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%PLOTPHASES Plot the phase angles for elements of the state
+%   The angles are between $-\pi$ and $\pi$
+%   
+%   Syntax: phasePlot = plotPhases(Qregister)
+%       plot the phases with qubit state labels
+%
+%   Syntax: phasePlot = plotPhases(Qregister,isLexicographDisplay)
+%       displays lexicographic labels if isLexicographDisplay=true
+
+%TODO: type checks
+
 fullState = Qregister.getState();
 
 probabilities = angle(fullState);

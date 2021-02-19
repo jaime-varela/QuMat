@@ -1,8 +1,8 @@
-function updatedRegister = xGate(qregister,qubitIndex)
-%singleQubitGate - Apply X to the qubit in the ith position
+function updatedRegister = yGate(qregister,qubitIndex)
+%singleQubitGate - Apply Y to the qubit in the ith position
 %
-% Syntax: updatedRegister = singleQubitGate(qregister,qubitIndex,gateMatrix)
+% Syntax: updatedRegister = yGate(qregister,qubitIndex)
 %
-% Applies [...] to the state and returns the register
+
     updatedRegister = singleQubitGate(qregister,qubitIndex,standardGates.Y);
 end

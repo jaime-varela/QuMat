@@ -1,6 +1,10 @@
 function bellRegister = bellPair(ind1,ind2)
 %BELLPAIR Summary of this function goes here
 %   See page 25 of Nielsen and Chuang text
+%
+%    bellPair(i,j) --> bij
+%
+
 
 % TODO verify inputs
 

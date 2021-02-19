@@ -1,6 +1,6 @@
 function updatedRegister = cnotGate(qregister,controlQubit,targetQubit) %#codegen
-%CONTROLGATE Summary of this function goes here
-%   Detailed explanation goes here
+%CONTROLGATE Cnot gate
+%   Standard Cnot gate on two qubits
 
     if controlQubit == targetQubit
        error('Control qubit can not be the same as target');

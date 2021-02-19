@@ -1,6 +1,15 @@
 function probPlot = plotProbabilites(Qregister,varargin)
-%PLOTPROBABILITES Summary of this function goes here
-%   Detailed explanation goes here
+%PLOTPROBABILITIES Plot the probability amplitudes of the state
+%   The values are between 0 and 1
+%   
+%   Syntax: probPlot = plotProbabilites(Qregister)
+%       plot the phases with qubit state labels
+%
+%   Syntax: probPlot = plotProbabilites(Qregister,isLexicographDisplay)
+%       displays lexicographic labels if isLexicographDisplay=true
+
+%TODO: type checks
+
 fullState = Qregister.getState();
 
 probabilities = conj(fullState) .* fullState;
